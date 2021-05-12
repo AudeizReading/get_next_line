@@ -6,12 +6,13 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/12 10:48:35 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/12 15:33:34 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
+#include <fcntl.h>
 
 char	*ft_strdup(const char *s1)
 {
@@ -99,11 +100,9 @@ int	get_next_line(int fd, char **line)
 
 	ret = read(fd, buf, BUFFER_SIZE);
 	*line = ft_strdup(buf);
+	printf(" ret = %d\n", ret);
 	if (ret > 0)
-	{
-		printf("ret = %d\n", ret);
 		ret = 1;
-	}
 	return (ret);
 }
 
@@ -112,8 +111,18 @@ int	main(int argc, char **argv)
 	(void) argc;
 	(void) argv;
 	char	*line;
+	int		fd;
+	int		gnl;
 
-	get_next_line(0, &line);
-	ft_putstr_fd(line, 0);
+	fd = open("test_file.txt", O_RDONLY);
+	gnl = 1;
+	while (gnl == 1)
+	{
+		gnl = get_next_line(fd, &line);
+		ft_putstr_fd(line, 1);
+	}
+	free(line);
+	close(fd);
 	return (0);
+
 }
