@@ -6,11 +6,12 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/12 10:42:40 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/12 10:48:35 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 char	*ft_strdup(const char *s1)
 {
@@ -99,7 +100,10 @@ int	get_next_line(int fd, char **line)
 	ret = read(fd, buf, BUFFER_SIZE);
 	*line = ft_strdup(buf);
 	if (ret > 0)
+	{
+		printf("ret = %d\n", ret);
 		ret = 1;
+	}
 	return (ret);
 }
 
