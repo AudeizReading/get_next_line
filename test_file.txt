@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    test_file.txt                                      :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: alellouc <marvin@42.fr>                    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/05/10 14:29:56 by alellouc          #+#    #+#              #
-#    Updated: 2021/05/10 14:58:28 by alellouc         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 Ce projet va non seulement vous permettre d'ajouter une fonction très pratique a
 votre collection, mais vous permettra également d'aborder un nouvel element
 surprenant de la programmation en C : les variables statiques.
