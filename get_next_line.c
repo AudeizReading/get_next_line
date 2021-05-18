@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/18 13:06:00 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/18 18:00:56 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,16 +104,22 @@ char	*ft_strjoin(char const *s1, char const *s2)
 int	get_next_line(int fd, char **line)
 {
 	int	ret;
-/*	static char *buf;*/
-	static char buf[BUFFER_SIZE + 1];
+/*	static char *buf;
+	static char buf[BUFFER_SIZE + 1];*/
+	static char buf[BUFFER_SIZE];
+	char		*newline;
 
+	
 	if (!line || BUFFER_SIZE < 1 || fd < 0)
 		return (-1);
-	*line = ft_strdup("");
-	while (!ft_memchr(buf, '\n', ft_strlen(buf)))
+	*line = ft_strdup(buf);
+	newline = ft_memchr(buf, '\n', ft_strlen(buf));
+	/*while (!ft_memchr(buf, '\n', ft_strlen(buf)))*/
+	while (!newline)
 	{
 		ret = read((size_t)fd, buf, BUFFER_SIZE);
-		*line = ft_strjoin(*line, buf);
+		newline = ft_memchr(buf, '\n', ft_strlen(buf));
+		/**line = ft_strjoin(*line, buf);*/ /* Leaks of heap */
 	/*	buf = ft_memchr(buf, '\n', ft_strlen(buf));*/
 	/*	ft_memcpy(buf, ft_memchr(buf, '\n', ft_strlen(buf)), ft_strlen(buf));*/
 		ft_putstr_fd("\nOn vient de recup ceci : ", 1);
