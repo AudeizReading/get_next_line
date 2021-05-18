@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/18 12:25:14 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/18 13:06:00 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,13 +104,22 @@ char	*ft_strjoin(char const *s1, char const *s2)
 int	get_next_line(int fd, char **line)
 {
 	int	ret;
+/*	static char *buf;*/
 	static char buf[BUFFER_SIZE + 1];
 
-	*line = "";
+	if (!line || BUFFER_SIZE < 1 || fd < 0)
+		return (-1);
+	*line = ft_strdup("");
 	while (!ft_memchr(buf, '\n', ft_strlen(buf)))
 	{
-		ret = read(fd, buf, BUFFER_SIZE);
+		ret = read((size_t)fd, buf, BUFFER_SIZE);
 		*line = ft_strjoin(*line, buf);
+	/*	buf = ft_memchr(buf, '\n', ft_strlen(buf));*/
+	/*	ft_memcpy(buf, ft_memchr(buf, '\n', ft_strlen(buf)), ft_strlen(buf));*/
+		ft_putstr_fd("\nOn vient de recup ceci : ", 1);
+		ft_putstr_fd(*line, 1);
+		ft_putstr_fd("\nbuf contient : ", 1);
+		ft_putstr_fd(buf, 1);
 	}
 	/*printf("\nret = %d", ret);*/
 /*	printf(" ret = %d\n", ret);*/
