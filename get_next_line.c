@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/19 09:50:36 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/19 11:24:28 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,19 +104,15 @@ char	*ft_strjoin(char const *s1, char const *s2)
 int	get_next_line(int fd, char **line)
 {
 	int	ret;
-/*	static char *buf;*/
-/*	static char buf[BUFFER_SIZE + 1];*/
 	static char buf[BUFFER_SIZE];
 	char		*newline;
+/*	char		*tmp;*/t
 	int			i;
 
 	
 	if (!line || BUFFER_SIZE < 1 || fd < 0)
 		return (-1);
 	i = 0;
-	/*buf = (char *)malloc(sizeof(*buf) * BUFFER_SIZE);*/
-	/*while (i > ft_strlen*/
-	/**line = ft_strdup(buf);*/
 	if (ft_strlen(buf) > 0)
 	{
 		free(*line);
@@ -128,9 +124,8 @@ int	get_next_line(int fd, char **line)
 	/*while (!ft_memchr(buf, '\n', ft_strlen(buf)))*/
 	while (!newline)
 	{
-		ret = read((size_t)fd, buf, BUFFER_SIZE);
+		ret = read(fd, buf, BUFFER_SIZE);
 		newline = ft_memchr(buf, '\n', ft_strlen(buf));
-		/*buf = ft_memchr(buf, '\n', ft_strlen(buf));*/
 		if (newline)
 		{
 			ft_putstr_fd("\nPour voir ce que donne la newline : \033[1;31m", 1);
@@ -139,25 +134,33 @@ int	get_next_line(int fd, char **line)
 			ft_putstr_fd("\nbuf contient : \033[0;36m", 1);
 			ft_putstr_fd(buf, 1);
 			ft_putstr_fd("\n\033[0m", 1);
-			ft_memcpy(buf, newline, ft_strlen(buf));
+		/*	tmp = ft_memcpy(buf, buf, ft_strlen(buf) - ft_strlen(newline));
+			ft_putstr_fd("\ntmp contient : \033[0;35", 1);
+			ft_putstr_fd(tmp, 1);
+			ft_putstr_fd("\n\033[0m", 1);*/
+	/*		ft_memcpy(buf, buf, ft_strlen(buf) - ft_strlen(newline));*/
+		/*	ft_memcpy(buf, tmp, BUFFER_SIZE - ft_strlen(newline));*/
+			i = BUFFER_SIZE - ft_strlen(newline);
+			while (BUFFER_SIZE--)
+			{
+				if (i < BUFFER_SIZE)
+					buf[BUFFER_SIZE] = 0;
+			}
+			newline++;
 
 		}
 		*line = ft_strjoin(*line, buf); /* Leaks of heap */
-		ft_putstr_fd("\nOn vient de recup ceci : \033[1;32m", 1);
+		ft_putstr_fd("\nDans la line, on a : \033[1;32m", 1);
 		ft_putstr_fd(*line, 1);
 		ft_putstr_fd("\n\033[0m", 1);
 		ft_putstr_fd("\nbuf contient : \033[0;36m", 1);
 		ft_putstr_fd(buf, 1);
 		ft_putstr_fd("\n\033[0m", 1);
 	}
-	/*printf("\nret = %d", ret);*/
-/*	printf(" ret = %d\n", ret);*/
 	if (ret > 0)
 		ret = 1;
 	if (ret == 0)
 		*buf = 0;
-	/**line = ft_strdup(buf);*/
-/*	*line = ft_strjoin(*line, buf);*/
 	return (ret);
 }
 
