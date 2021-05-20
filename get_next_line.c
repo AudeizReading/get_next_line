@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/20 08:09:41 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/20 08:14:50 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,13 +151,13 @@ int	get_next_line(int fd, char **line)
 		{
 			*line = ft_strjoin(*line, buf); /* Leaks of heap */
 		}
-		if (newline)
+		/*if (newline)
 		{
 			ft_memcpy(buf, newline, BUFFER_SIZE);
 			ft_putstr_fd("\nPour voir ce que donne la newline, avant final buf : \033[1;31m", 1);
 			ft_putstr_fd(newline, 1);
 			ft_putstr_fd("\n\033[0m", 1);
-		}
+		}*/
 		ft_putstr_fd("\nDans la line, on a : \033[1;32m", 1);
 		ft_putstr_fd(*line, 1);
 		ft_putstr_fd("\n\033[0m", 1);
