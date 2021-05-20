@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/20 10:37:02 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/20 11:42:52 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,6 @@ int	get_next_line(int fd, char **line)
 	int	ret;
 	static char buf[BUFFER_SIZE];
 	char		*newline;
-/*	char		*tmp;*/
 	int			i;
 	int			size;
 
@@ -116,13 +115,7 @@ int	get_next_line(int fd, char **line)
 	if (!line || BUFFER_SIZE < 1 || fd < 0)
 		return (-1);
 	i = 0;
-	if (ft_strlen(buf) > 0)
-	{
-		free(*line);
-		*line = ft_strdup(buf);
-	}
-	else
-		*line = ft_strdup(""); 
+	*line = ft_strdup(buf);
 	newline = ft_memchr(buf, '\n', ft_strlen(buf));
 	while (!newline)
 	{
@@ -133,7 +126,8 @@ int	get_next_line(int fd, char **line)
 			newline++;
 		/*	ft_memcpy(newline, newline, ft_strlen(newline));*/
 			size = BUFFER_SIZE;
-		/*	while (size--)
+			i = ft_strlen(buf) - ft_strlen(newline);
+			/*while (size--)
 			{
 				if (i < size)
 					buf[size] = 0;
@@ -144,7 +138,7 @@ int	get_next_line(int fd, char **line)
 			ft_putstr_fd("\nbuf contient : \033[0;36m", 1);
 			ft_putstr_fd(buf, 1);
 			ft_putstr_fd("\n\033[0m", 1);
-			ft_memcpy(buf, newline, BUFFER_SIZE);
+		/*	ft_memcpy(buf, newline, BUFFER_SIZE);*/
 			*line = ft_strjoin(*line, buf); /* Leaks of heap */
 		/*	ft_putstr_fd("\nPour voir ce que donne la newline : \033[1;31m", 1);
 			ft_putstr_fd(newline, 1);
@@ -154,10 +148,10 @@ int	get_next_line(int fd, char **line)
 			ft_putstr_fd("\n\033[0m", 1);*/
 
 		}
-	/*	else
-		{*/
+		else
+		{
 			*line = ft_strjoin(*line, buf); /* Leaks of heap */
-	/*	}*/
+		}
 	}
 	ft_putstr_fd("\nDans la line, on a : \033[1;32m", 1);
 	ft_putstr_fd(*line, 1);
