@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/20 14:13:15 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/20 21:35:41 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,11 +105,11 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 int	get_next_line(int fd, char **line)
 {
-	int	ret;
+	int			ret;
 	static char buf[BUFFER_SIZE];
 	char		*newline;
 	int			i;
-	int			size;
+	/*int			size;*/
 
 	
 	if (!line || BUFFER_SIZE < 1 || fd < 0)
@@ -121,6 +121,8 @@ int	get_next_line(int fd, char **line)
 	{
 			ft_putstr_fd("\nPour voir ce que donne la newline 0 : \033[1;31m", 1);
 			ft_putstr_fd(newline, 1);
+	/*		ft_putstr_fd("\n", 1);*/
+			ft_putstr_fd(ft_memchr(newline, '\n', ft_strlen(newline)), 1);
 			ft_putstr_fd("\033[0m", 1);
 	}
 	while (!newline)
@@ -131,24 +133,28 @@ int	get_next_line(int fd, char **line)
 		{
 			newline++;
 			newline = ft_strdup(newline);
-			size = BUFFER_SIZE;
+			/*size = BUFFER_SIZE;*/
 			i = ft_strlen(buf) - ft_strlen(newline);
 
-			while (size--)
+		/*	while (size--)*/
+			while (ret--)
 			{
-				if (i <= size)
-					buf[size] = 0;
+				/*if (i <= size)
+					buf[size] = 0;*/
+				if (i <= ret)
+					buf[ret] = 0;
+
 			}
+			ret = 1;
 			ft_putstr_fd("\nPour voir ce que donne la newline 1 : \033[1;31m", 1);
 			ft_putstr_fd(newline, 1);
 			ft_putstr_fd("\033[0m", 1);
 			ft_putstr_fd("\nbuf contient : \033[0;36m", 1);
 			ft_putstr_fd(buf, 1);
 			ft_putstr_fd("\033[0m", 1);
-			/* C'est ici qu'il faudrait scinder le buffer en deux parties :*/
-			*line = ft_strjoin(*line, buf); /* Leaks of heap */
+			*line = ft_strjoin(*line, buf); 
 			ft_memcpy(buf, newline, BUFFER_SIZE);
-			ft_putstr_fd("\nPour voir ce que donne la newline 2: \033[1;31m", 1);
+			ft_putstr_fd("Pour voir ce que donne la newline 2: \033[1;31m", 1);
 			ft_putstr_fd(newline, 1);
 			ft_putstr_fd("\033[0m", 1);
 			ft_putstr_fd("\nbuf contient : \033[0;36m", 1);
@@ -156,6 +162,7 @@ int	get_next_line(int fd, char **line)
 			ft_putstr_fd("\033[0m", 1);
 
 			free(newline);
+		/*	newline = NULL;*/
 		}
 		else
 		{
