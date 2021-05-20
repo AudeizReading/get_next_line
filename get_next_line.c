@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/19 14:03:37 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/20 08:09:41 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,9 +144,13 @@ int	get_next_line(int fd, char **line)
 					buf[size] = 0;
 			}
 			newline++;
-			/*ft_memcpy(buf, newline, BUFFER_SIZE);*/
+			*line = ft_strjoin(*line, buf); /* Leaks of heap */
+			ft_memcpy(buf, newline, BUFFER_SIZE);
 		}
-		*line = ft_strjoin(*line, buf); /* Leaks of heap */
+		else
+		{
+			*line = ft_strjoin(*line, buf); /* Leaks of heap */
+		}
 		if (newline)
 		{
 			ft_memcpy(buf, newline, BUFFER_SIZE);
@@ -179,14 +183,14 @@ int	main(int argc, char **argv)
 		fd = open(argv[1], O_RDONLY);
 	else
 		fd = 0;
-/*	gnl = 1;
+	gnl = 1;
 	while (gnl == 1)
-	{*/
+	{
 	gnl = get_next_line(fd, &line);
 	ft_putstr_fd(line, 1);
 	/*	ft_putstr_fd("\n", 1);*/
 	/*	printf(" gnl = %d\n", gnl);*/
-/*	}*/
+	}
 	free(line);
 	close(fd);
 	return (0);
