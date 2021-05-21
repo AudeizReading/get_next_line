@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/20 21:35:41 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/21 08:36:03 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,25 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (dst);
 }
 
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*dst;
+	size_t	len_s;
+
+	len_s = ft_strlen(s);
+	if (len > len_s)
+		len = len_s;
+	if (len + start > len_s && start < len_s)
+		len = len_s - start;
+	if (start >= len_s)
+		len = 0;
+	dst = (char *)malloc(sizeof(*dst) * (len + 1));
+	if (!dst)
+		return (NULL);
+	ft_memcpy(dst, s + start, len);
+	return (dst);
+}
+
 int	get_next_line(int fd, char **line)
 {
 	int			ret;
@@ -115,21 +134,22 @@ int	get_next_line(int fd, char **line)
 	if (!line || BUFFER_SIZE < 1 || fd < 0)
 		return (-1);
 	i = 0;
-	*line = ft_strdup(buf);
+	ret = 1;
 	newline = ft_memchr(buf, '\n', ft_strlen(buf));
 	if (newline)
 	{
-			ft_putstr_fd("\nPour voir ce que donne la newline 0 : \033[1;31m", 1);
-			ft_putstr_fd(newline, 1);
-	/*		ft_putstr_fd("\n", 1);*/
-			ft_putstr_fd(ft_memchr(newline, '\n', ft_strlen(newline)), 1);
-			ft_putstr_fd("\033[0m", 1);
+		newline++;
+		*line = ft_strdup(newline);
 	}
-	while (!newline)
+	else
+	{
+		*line = ft_strdup(buf);
+	while (!newline && ret > 0)
+/*	while (!ft_memchr(buf, '\n', ft_strlen(buf)) && ret)*/
 	{
 		ret = read(fd, buf, BUFFER_SIZE);
 		newline = ft_memchr(buf, '\n', ft_strlen(buf));
-		if (newline)
+		if (newline && ret > 0)
 		{
 			newline++;
 			newline = ft_strdup(newline);
@@ -169,6 +189,7 @@ int	get_next_line(int fd, char **line)
 			*line = ft_strjoin(*line, buf); /* Leaks of heap */
 		}
 	}
+	}
 	ft_putstr_fd("\nbuf final contient : \033[0;36m", 1);
 	ft_putstr_fd(buf, 1);
 	ft_putstr_fd("\033[0m", 1);ft_putstr_fd("\nDans la line, on a : \033[1;32m", 1);
@@ -178,8 +199,8 @@ int	get_next_line(int fd, char **line)
 
 	if (ret > 0)
 		ret = 1;
-	if (ret == 0)
-		*buf = 0;
+/*	if (ret == 0)
+		*buf = 0;*/
 	return (ret);
 }
 
