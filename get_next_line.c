@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/21 10:33:06 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/22 11:54:11 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 int	get_next_line(int fd, char **line)
 {
 /*	First try that sucks, but don't want to forget what i've done if my second
-**	try isn't as so marvellous as i think
-**	int			ret;
+**	try isn't as so marvellous as i think */
+	int			ret;
 	static char buf[BUFFER_SIZE];
 	char		*newline;
 	int			i;
@@ -137,22 +137,26 @@ int	get_next_line(int fd, char **line)
 	if (!line || BUFFER_SIZE < 1 || fd < 0)
 		return (-1);
 	i = 0;
-	newline = ft_memchr(buf, '\n', ft_strlen(buf));
+	newline = NULL;
 	*line = ft_strdup(buf);
-	while (!newline && ret > 0)
+	while (!newline)
 	{
 		ret = read(fd, buf, BUFFER_SIZE);
 		newline = ft_memchr(buf, '\n', ft_strlen(buf));
-		if (newline && ret > 0)
+		if (newline)
 		{
 			newline++;
 			newline = ft_strdup(newline);
-			i = ft_strlen(buf) - ft_strlen(newline);
+		/*	i = ft_strlen(buf) - ft_strlen(newline);*/
+			i = ret - ft_strlen(newline);
 
 			while (ret--)
 			{
 				if (i <= ret)
 					buf[ret] = 0;
+			/*	ft_putstr_fd("\n(boucle while(ret--)) buf contient : \033[0;36m", 1);
+				ft_putstr_fd(buf, 1);
+				ft_putstr_fd("\033[0m", 1);*/
 
 			}
 			ret = 1;
@@ -164,6 +168,7 @@ int	get_next_line(int fd, char **line)
 			ft_putstr_fd("\033[0m", 1);
 			*line = ft_strjoin(*line, buf); 
 			ft_memcpy(buf, newline, BUFFER_SIZE);
+/*			ft_memcpy(buf, newline, ft_strlen(buf));*/
 			ft_putstr_fd("Pour voir ce que donne la newline 2: \033[1;31m", 1);
 			ft_putstr_fd(newline, 1);
 			ft_putstr_fd("\033[0m", 1);
@@ -171,7 +176,7 @@ int	get_next_line(int fd, char **line)
 			ft_putstr_fd(buf, 1);
 			ft_putstr_fd("\033[0m", 1);
 
-			free(newline);
+		/*	free(newline);*/
 		}
 		else
 		{
@@ -185,47 +190,9 @@ int	get_next_line(int fd, char **line)
 	ft_putstr_fd("\033[0m", 1);
 	
 
-	if (ret > 0)
+	if (ret > 0 /*|| newline*/)
 		ret = 1;
-	return (ret);*/
-	int			ret;
-	char		*buf;
-	char		*nextline;
-	static char	*st_buf = NULL;
-
-	buf = (char *)malloc(sizeof(*buf) * BUFFER_SIZE);
-	nextline = NULL;
-	if (!line || !buf || BUFFER_SIZE < 1 || fd < 0 || fd > OPEN_MAX)
-		return (-1);
-	if (*st_buf)
-	{
-		nextline = ft_memchr(st_buf, '\n', ft_strlen(st_buf));
-		if (nextline)
-		{
-			*line = ft_substr(st_buf, 0, ft_strlen(st_buf) - ft_strlen(nextline));
-			nextline++;
-			if (ft_strlen(nextline) > 0)
-				st_buf = ft_strdup(nextline);
-			ret = 1;
-			return (ret);
-		}
-		else
-			*line = ft_strdup(st_buf);
-	}
-	while (!nextline)
-	{
-		ret = read(fd, buf, BUFFER_SIZE);
-		nextline = ft_memchr(st_buf, '\n', ft_strlen(st_buf));
-		if (nextline)
-		{
-			nextline++;
-			st_buf = ft_strdup(buf);
-			free(buf);
-			*line = ft_strjoin(*line, st_buf);
-		}
-		if (ret > 0)
-			ret = 1;
-	}
+	printf("\nret : %d\n", ret);
 	return (ret);
 }
 
@@ -243,13 +210,15 @@ int	main(int argc, char **argv)
 		fd = 0;
 	gnl = 1;
 	while (gnl == 1)
-/*	while (i++ <= 2)*/
+/*	while (i++ <= 4)*/
 	{
-	gnl = get_next_line(fd, &line);
-	ft_putstr_fd(line, 1);
+		gnl = get_next_line(fd, &line);
+		ft_putstr_fd(line, 1);
 	/*	ft_putstr_fd("\n", 1);*/
 	/*	printf(" gnl = %d\n", gnl);*/
 	}
+		ft_putstr_fd("\n", 1);
+		printf(" gnl = %d\n", gnl);
 	free(line);
 	close(fd);
 	return (0);
