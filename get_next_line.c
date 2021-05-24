@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/23 20:20:02 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/24 19:55:38 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,8 +148,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 /*ft_memcpy(dst, s1, len_s1);
 ft_memcpy((dst + len_s1), s2, len_s2);*/
 	dst[len_s1 + len_s2] = 0;
-	if (ft_strlen(s1) > 0)
-		free((void *)s1);
+/*	if (ft_strlen(s1) > 0)
+		free((void *)s1);*/
+	free((void *)s1);
 /*	free((void *)s2);*/ /* On l'utilisera si je me decide a utiliser buf comme un pointeur*/
 	return (dst);
 }
@@ -174,6 +175,29 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (dst);
 }
 
+void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
+{
+	unsigned char		*p_dst;
+	unsigned const char	*p_src;
+	unsigned char		cc;
+
+	p_dst = dst;
+	p_src = src;
+	cc = c;
+	while (n--)
+	{
+		*p_dst++ = *p_src;
+		if (*p_src++ == cc)
+		{
+			/**--p_dst = 0;*/
+			*(unsigned char *)(dst + (p_dst - (unsigned char *)dst) - 1) = 0;
+		/*	printf("\n\033[33mp_dst de memccpy: %s\033[0m\n", dst);*/
+			return (p_dst);
+		}
+	}
+	return (NULL);
+}
+
 char	*ft_strnew(size_t size)
 {
 	return (ft_calloc(sizeof(char), size + 1));
@@ -194,162 +218,56 @@ int		ft_memdel(void **ptr)
 int	get_next_line(int fd, char **line)
 {
 	int			ret;
-/*	static char *buf = NULL;*/
-	char		buf[BUFFER_SIZE + 1];
-	/*static char	*endline = NULL;*/
-	static char	*newline;
-/*	char		*tmp;*/
-/*	int			i;*/
-
-/*	ssize_t		r;
-	char		bf[BUFFER_SIZE + (r = 1)];
-	static char	*c_line = NULL;
+	static char		buf[BUFFER_SIZE + 1];
+	char	*newline;
 	char		*tmp;
 
-	if (fd < 0 || !line || BUFFER_SIZE < 1)
-		return (-1);
-	c_line == NULL ? c_line = ft_strnew(0) : NULL;
-	while (!ft_strchr(c_line, '\n') && (r = read(fd, bf, BUFFER_SIZE)) > 0)
-	{
-		bf[r] = 0;
-		tmp = ft_strjoin(c_line, bf);
-		ft_memdel((void **)&c_line);
-		c_line = tmp;
-	}
-	if (r == 0)
-		*line = ft_strdup(c_line);
-	else if (r > 0)
-		*line = ft_substr(c_line, 0, ((char *)ft_strchr(c_line, '\n') - c_line));
-	else
-		return (-1);
-	tmp = ft_strdup(c_line + (ft_strlen(*line) + ((r > 0) ? +1 : +0)));
-	ft_memdel((void **)&c_line);
-	c_line = tmp;
-	return (r == 0 ? 0 * ft_memdel((void **)&c_line) : 1);*/
-	
 	if (fd < 0 || fd > FOPEN_MAX || !line || BUFFER_SIZE < 1)
 		return (-1);
-	/*if (!newline)
-		newline = ft_calloc(sizeof(*newline), 1);
+	if (ft_strchr(buf, '\n'))
+	{
+		newline = ft_calloc(sizeof(*newline), ft_strlen(buf));
+		tmp = ft_calloc(sizeof(*tmp), ft_strlen(buf));
+		ft_memccpy(tmp, buf, '\n', ft_strlen(buf));
+		newline = ft_strjoin(newline, tmp);
+		*line = ft_strdup(newline);
+		free(newline);
+		free(tmp);
+		newline = ft_strchr(buf, '\n');
+		newline++;
+		ft_memcpy(buf, newline, BUFFER_SIZE);
+		return (1);
+	}
 	else
-		*line = ft_strdup(newline);*/
-	if (newline)
-		printf("\t\033[1;31mnewline - debut: %s\033[0m\n", newline);
-	buf[0] = 0;
-	ret = 1;
-	while (!ft_strchr(newline, '\n') && read(fd, buf, BUFFER_SIZE) > 0)
+		newline = ft_strdup(buf);
+
+	while ((ret = read(fd, buf, BUFFER_SIZE)) > 0 && !ft_strchr(buf, '\n'))
 	{
 		buf[BUFFER_SIZE] = 0;
-		ret = ft_strlen(buf);
 		newline = ft_strjoin(newline, buf);
-
-	/*	printf("\033[1;31m\tbuf : %s\033[0m\n", buf);
-		printf("\033[1;31m\tsize buf : %d\033[0m\n", ret);
-		printf("\tnewline : %s\n", newline);*/
 	}
-	if (ret == 0 || !ft_strlen(buf))
+	if (ret == 0)
 	{
-	/*	*line = ft_strdup(newline);
-		free(newline);*/
+		/* Ici ca pose des soucis pour le fd 0 car le 0 n'est jamais atteint, il
+		** y a toujours un \n qui est compté */
+		printf("\033[1;33mHello, this is the end\033[0m");
 		return (0);
 	}
 	else if (ret == -1)
 		return (-1);
 	else
 	{
-		/* Scinder "buf" en deux parties :
-		** celle avant \n, qui doit aller dans line
-		** celle apres \n, qui doit aller dans la variable statique */
-		/*newline = ft_strjoin(newline, buf);*/
+		tmp = ft_calloc(sizeof(*tmp), ft_strlen(buf));
+		ft_memccpy(tmp, buf, '\n', ft_strlen(buf));
+		newline = ft_strjoin(newline, tmp);
 		*line = ft_strdup(newline);
 		free(newline);
+		free(tmp);
 		newline = ft_strchr(buf, '\n');
-		if (newline)
-			printf("\t\033[1;31mnewline: %s\033[0m\n", newline);
-		printf("\n\t\033[1;35mbuf: %s\033[0m\n", buf);
-	/*	*line = ft_substr(newline, 0, ((char *)ft_strchr(newline, '\n') -
-	**	newline));*/
-	/*	return (1);*/
+		newline++;
+		ft_memcpy(buf, newline, BUFFER_SIZE);
 	}
-/*	tmp = ft_strdup(newline + (ft_strlen(*line) + ((r > 0) ? +1 : +0)));*/
-/*	ft_memdel((void **)&c_line);*/
-/*	free(newline);*/
-/*	newline = tmp;
-	free(tmp);*/
 	return (1);
-	
-/*	if (!line || BUFFER_SIZE < 1 || fd < 0)
-		return (-1);
-	i = 0;
-	newline = NULL;
-	if (buf)
-		*line = ft_strdup(buf);
-	else
-		*line = ft_strdup("");
-	while (!newline)
-	{
-		buf = (char *)malloc(sizeof(*buf) * BUFFER_SIZE);
-		ret = read(fd, buf, BUFFER_SIZE);
-		newline = ft_memchr(buf, '\n', ft_strlen(buf));
-		if (newline && ret > 0)
-		{
-			newline++;
-			newline = ft_strdup(newline);
-			i = ret - ft_strlen(newline);
-
-			while (ret--)
-			{
-				if (i <= ret)
-					buf[ret] = 0;
-			}
-			printf("\nret si newline : %d\n", ret);
-			ret = 1;*/
-
-			/* Debug */
-		/*	ft_putstr_fd("\nPour voir ce que donne la newline 1 : \033[1;31m", 1);
-			ft_putstr_fd(newline, 1);
-			ft_putstr_fd("\033[0m", 1);
-			ft_putstr_fd("\nbuf contient : \033[0;36m", 1);
-			ft_putstr_fd(buf, 1);
-			ft_putstr_fd("\033[0m", 1);*/
-			/* Fin Debug */
-
-		/*	*line = ft_strjoin(*line, buf); 
-			buf = ft_strdup(newline);*/
-			/*buf =*//* ft_memcpy(buf, newline, BUFFER_SIZE);*/
-/*			ft_memcpy(buf, newline, ft_strlen(buf));*/
-
-			/* Debug */
-		/*	ft_putstr_fd("Pour voir ce que donne la newline 2: \033[1;31m", 1);
-			ft_putstr_fd(newline, 1);
-			ft_putstr_fd("\033[0m", 1);
-			ft_putstr_fd("\nbuf contient : \033[0;36m", 1);
-			ft_putstr_fd(buf, 1);
-			ft_putstr_fd("\033[0m", 1);*/
-			/* Fin Debug */
-
-		/*	free(newline);*/
-	/*	}*/
-/*		else
-		{
-			*line = ft_strjoin(*line, buf);
-		}
-	}*/
-	/* Debug */
-/*	ft_putstr_fd("\nbuf final contient : \033[0;36m", 1);
-	ft_putstr_fd(buf, 1);
-	ft_putstr_fd("\033[0m", 1);ft_putstr_fd("\nDans la line, on a : \033[1;32m", 1);
-	ft_putstr_fd(*line, 1);
-	ft_putstr_fd("\033[0m", 1);*/
-	/* Fin Debug */
-	
-
-/*	if (ret > 0 || newline)
-		ret = 1;
-	if (ret == 0)
-		free(buf);
-	printf("\nret : %d\n", ret);
-	return (ret);*/
 }
 
 /* Uniquement pour le debugage */
@@ -358,24 +276,18 @@ int	main(int argc, char **argv)
 	char	*line;
 	size_t	fd;
 	int		gnl;
-/*	int		i = 0;*/
+/*	int		i = 30;*/
 
 	if (argc == 2)
 		fd = open(argv[1], O_RDONLY);
 	else
 		fd = 0;
-	gnl = 1;
-	while (gnl == 1)
-/*	while (i++ <= 15)*/
+	while ((gnl = get_next_line(fd, &line)))
 	{
-		gnl = get_next_line(fd, &line);
 		ft_putstr_fd(line, 1);
-	/*	ft_putstr_fd("\n", 1);*/
-	/*	printf(" gnl = %d\n", gnl);*/
+		free(line);
 	}
-		ft_putstr_fd("\n", 1);
-		printf(" gnl = %d\n", gnl);
-	free(line);
+	ft_putstr_fd("\n", 1);
 	close(fd);
 	return (0);
 }
