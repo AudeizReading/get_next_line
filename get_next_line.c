@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/24 21:49:09 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/24 21:54:07 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,7 @@ int	get_next_line(int fd, char **line)
 		ft_memccpy(buf, newline, '\0', BUFFER_SIZE);
 		return (1);
 	}
-	else /* Ici perte de 17 bytes */
+	else
 		newline = ft_strdup(buf);
 	ret = read(fd, buf, BUFFER_SIZE);
 	/*while ((ret = read(fd, buf, BUFFER_SIZE)) > 0 && !ft_strchr(buf, '\n'))*/
