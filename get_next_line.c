@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/24 19:55:38 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/24 21:49:09 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ size_t	ft_strlen(const char *s)
 	return (len);
 }
 
-void	*ft_memset(void *b, int c, size_t len)
+/*void	*ft_memset(void *b, int c, size_t len)
 {
 	unsigned char	*p_b;
 	unsigned char	cc;
@@ -43,7 +43,7 @@ void	*ft_memset(void *b, int c, size_t len)
 	while (len--)
 		*p_b++ = cc;
 	return (b);
-}
+}*/
 
 void	*ft_calloc(size_t count, size_t size)
 {
@@ -59,7 +59,9 @@ void	*ft_calloc(size_t count, size_t size)
 	buffer = malloc(len);
 	if (!buffer)
 		return (NULL);
-	ft_memset(buffer, '\0', len);
+	/*ft_memset(buffer, '\0', len);*/
+	while (len--)
+		buffer[len] = 0;
 	return ((void *)buffer);
 }
 
@@ -83,19 +85,6 @@ char	*ft_strdup(const char *s1)
 	return (dest);
 }
 
-void	*ft_memchr(const void *s, int c, size_t n)
-{
-	unsigned char	*p_s;
-	unsigned char	c_c;
-
-	p_s = (unsigned char *)s;
-	c_c = (unsigned char)c;
-	while (n--)
-		if (*p_s++ == c_c)
-			return (--p_s);
-	return (NULL);
-}
-
 void	*ft_strchr(const char *s, int c)
 {
 	char	*p_s;
@@ -111,7 +100,7 @@ void	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+/*void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
 	unsigned char		*p_dst;
 	unsigned const char	*p_src;
@@ -122,58 +111,8 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 		return ((void *)0);
 	while (n--)
 		*p_dst++ = *p_src++;
-/*	free((void *)p_dst);
-	free((void *)p_src);*/
 	return (dst);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*dst;
-	size_t	len_s1;
-	size_t	len_s2;
-	size_t	len_tmp;
-
-	len_s1 = ft_strlen(s1);
-	len_s2 = ft_strlen(s2);
-	dst = (char *)malloc(sizeof(*dst) * (len_s1 + len_s2 + 1));
-	if (dst == NULL)
-		return (NULL);
-	len_tmp = len_s1;
-	while (len_tmp--)
-		dst[len_tmp] = s1[len_tmp];
-	len_tmp = len_s2;
-	while (len_tmp--)
-		dst[len_s1 + len_tmp] = s2[len_tmp];
-/*ft_memcpy(dst, s1, len_s1);
-ft_memcpy((dst + len_s1), s2, len_s2);*/
-	dst[len_s1 + len_s2] = 0;
-/*	if (ft_strlen(s1) > 0)
-		free((void *)s1);*/
-	free((void *)s1);
-/*	free((void *)s2);*/ /* On l'utilisera si je me decide a utiliser buf comme un pointeur*/
-	return (dst);
-}
-
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char	*dst;
-	size_t	len_s;
-
-	len_s = ft_strlen(s);
-	if (len > len_s)
-		len = len_s;
-	if (len + start > len_s && start < len_s)
-		len = len_s - start;
-	if (start >= len_s)
-		len = 0;
-	dst = (char *)malloc(sizeof(*dst) * (len + 1));
-	if (!dst)
-		return (NULL);
-	ft_memcpy(dst, s + start, len);
-	free((void *)s);
-	return (dst);
-}
+}*/
 
 void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
 {
@@ -189,30 +128,31 @@ void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
 		*p_dst++ = *p_src;
 		if (*p_src++ == cc)
 		{
-			/**--p_dst = 0;*/
-			*(unsigned char *)(dst + (p_dst - (unsigned char *)dst) - 1) = 0;
-		/*	printf("\n\033[33mp_dst de memccpy: %s\033[0m\n", dst);*/
+			*--p_dst = 0;
+		/*	*(unsigned char *)(dst + (p_dst - (unsigned char *)dst) - 1) = 0;*/
 			return (p_dst);
 		}
 	}
 	return (NULL);
 }
 
-char	*ft_strnew(size_t size)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	return (ft_calloc(sizeof(char), size + 1));
-}
+	char	*dst;
+	size_t	len_s1;
+	size_t	len_s2;
 
-int		ft_memdel(void **ptr)
-{
-	if (*ptr)
-	{
-		ft_memset(*ptr, 0, ft_strlen(*ptr));
-		free(*ptr);
-		*ptr = NULL;
-		return (1);
-	}
-	return (0);
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	dst = (char *)malloc(sizeof(*dst) * (len_s1 + len_s2 + 1));
+	if (dst == NULL)
+		return (NULL);
+	ft_memccpy(dst, s1, 0, len_s1);
+	ft_memccpy((dst + len_s1), s2, 0, len_s2);
+	dst[len_s1 + len_s2] = 0;
+	free((void *)s1);
+/*	free((void *)s2);*/ /* On l'utilisera si je me decide a utiliser buf comme un pointeur*/
+	return (dst);
 }
 
 int	get_next_line(int fd, char **line)
@@ -235,14 +175,17 @@ int	get_next_line(int fd, char **line)
 		free(tmp);
 		newline = ft_strchr(buf, '\n');
 		newline++;
-		ft_memcpy(buf, newline, BUFFER_SIZE);
+		/*ft_memcpy(buf, newline, BUFFER_SIZE);*/
+		ft_memccpy(buf, newline, '\0', BUFFER_SIZE);
 		return (1);
 	}
-	else
+	else /* Ici perte de 17 bytes */
 		newline = ft_strdup(buf);
-
-	while ((ret = read(fd, buf, BUFFER_SIZE)) > 0 && !ft_strchr(buf, '\n'))
+	ret = read(fd, buf, BUFFER_SIZE);
+	/*while ((ret = read(fd, buf, BUFFER_SIZE)) > 0 && !ft_strchr(buf, '\n'))*/
+	while (ret > 0 && !ft_strchr(buf, '\n'))
 	{
+		ret = read(fd, buf, BUFFER_SIZE);
 		buf[BUFFER_SIZE] = 0;
 		newline = ft_strjoin(newline, buf);
 	}
@@ -251,6 +194,7 @@ int	get_next_line(int fd, char **line)
 		/* Ici ca pose des soucis pour le fd 0 car le 0 n'est jamais atteint, il
 		** y a toujours un \n qui est compté */
 		printf("\033[1;33mHello, this is the end\033[0m");
+		free(newline);
 		return (0);
 	}
 	else if (ret == -1)
@@ -265,7 +209,8 @@ int	get_next_line(int fd, char **line)
 		free(tmp);
 		newline = ft_strchr(buf, '\n');
 		newline++;
-		ft_memcpy(buf, newline, BUFFER_SIZE);
+		/*ft_memcpy(buf, newline, BUFFER_SIZE);*/
+		ft_memccpy(buf, newline, '\0', BUFFER_SIZE);
 	}
 	return (1);
 }
@@ -276,15 +221,15 @@ int	main(int argc, char **argv)
 	char	*line;
 	size_t	fd;
 	int		gnl;
-/*	int		i = 30;*/
 
 	if (argc == 2)
 		fd = open(argv[1], O_RDONLY);
 	else
 		fd = 0;
-	while ((gnl = get_next_line(fd, &line)))
+	while ((gnl = get_next_line(fd, &line)) > 0)
 	{
 		ft_putstr_fd(line, 1);
+		ft_putstr_fd("\n", 1);
 		free(line);
 	}
 	ft_putstr_fd("\n", 1);
