@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/26 11:20:17 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/26 12:21:35 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,40 +134,6 @@ int	get_next_line(int fd, char **line)
 
 	if (fd < 0 || fd > FOPEN_MAX || !line || BUFFER_SIZE < 1)
 		return (-1);
-/*	if (ft_strchr(buf, '\n'))
-	{
-		newline = ft_calloc(sizeof(*newline), ft_strlen(buf));
-		tmp = ft_calloc(sizeof(*tmp), ft_strlen(buf));
-		test = ft_memccpy(tmp, buf, '\n', ft_strlen(buf));
-		*line = ft_strjoin(newline, tmp);
-		free(tmp);
-		ft_memccpy(buf, test, '\0', BUFFER_SIZE);
-		return (1);
-	}
-	else
-		newline = ft_strdup(buf);
-	ret = read(fd, buf, BUFFER_SIZE);
-	while (ret > 0 && !ft_strchr(buf, '\n'))
-	{
-		buf[ret] = 0;
-		newline = ft_strjoin(newline, buf);
-		ret = read(fd, buf, BUFFER_SIZE);
-	}
-	if (!ret)
-		free(newline);
-	else if (ret > 0)
-	{
-		tmp = ft_calloc(sizeof(*tmp), ret);
-		test = ft_memccpy(tmp, buf, '\n', ret);
-		*line = ft_strjoin(newline, tmp);
-		free(tmp);
-		ft_memccpy(buf, test, '\0', BUFFER_SIZE);
-		ret = 1;
-	}*/
-/*	if (!ft_strlen(buf))
-		ret = 1;
-	else
-		ret = ft_strlen(buf);*/
 	ret = ft_strlen(buf) + 1;
 	newline = ft_calloc(sizeof(*newline), BUFFER_SIZE);
 	while (ret > 0 && !ft_strchr(buf, '\n'))
