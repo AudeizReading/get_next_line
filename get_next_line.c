@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/26 16:10:11 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/26 17:20:53 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ int	get_next_line(int fd, char **line)
 	}
 	if (!ret)
 		free(newline);
+	/*	return (0);*/
 	else if (ret > 0)
 	{
 		tmp = ft_calloc(sizeof(*tmp), ret);
