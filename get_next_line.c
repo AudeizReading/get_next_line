@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/26 17:20:53 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/26 19:39:19 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,8 @@ int	get_next_line(int fd, char **line)
 		{
 			newline = ft_strjoin(newline, buf);
 			ret = read(fd, buf, BUFFER_SIZE);
+			if (ret == -1)
+				return (-1);
 			buf[ret] = 0;
 		/*	printf("\033[1;31mret read : %d\033[0m\n", ret);*/
 		}
@@ -163,7 +165,7 @@ int	get_next_line(int fd, char **line)
 }
 
 /* Uniquement pour le debugage */
-/*int	main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	char	*line;
 	size_t	fd;
@@ -185,5 +187,5 @@ int	get_next_line(int fd, char **line)
 	printf("\n\033[1;34m%d\033[0m\n", FOPEN_MAX);
 	close(fd);
 	return (0);
-}*/
+}/**/
 /* Fin debugage */
