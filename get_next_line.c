@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/26 19:39:19 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/27 15:22:16 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,36 +131,49 @@ int	get_next_line(int fd, char **line)
 	char	*newline;
 	char		*tmp;
 	char		*test;
+	static int	octets_lus = 0;
 
 	if (fd < 0 || fd > FOPEN_MAX || !line || BUFFER_SIZE < 1)
 		return (-1);
 	ret = ft_strlen(buf) + 1;
 	newline = ft_calloc(sizeof(*newline), BUFFER_SIZE);
+/*	if (!newline)
+		return (-1);*/
 	while (ret > 0 && !ft_strchr(buf, '\n'))
 	{
 		if (!ft_strchr(buf, '\n'))
 		{
 			newline = ft_strjoin(newline, buf);
+		/*	tmp = ft_strjoin(newline, buf);
+			free(newline);
+			newline = ft_strdup(tmp);
+			free(tmp);*/
 			ret = read(fd, buf, BUFFER_SIZE);
-			if (ret == -1)
-				return (-1);
+		/*	if (ret == -1 || !newline)
+				return (-1);*/
 			buf[ret] = 0;
 		/*	printf("\033[1;31mret read : %d\033[0m\n", ret);*/
+			octets_lus += ret;
 		}
 	}
 	if (!ret)
+	{
+		printf("\033[1;31moctets totaux lus : %d\033[0m\n", octets_lus);
 		free(newline);
-	/*	return (0);*/
+		/*return (0);*/
+	}
 	else if (ret > 0)
 	{
 		tmp = ft_calloc(sizeof(*tmp), ret);
+	/*	if (!tmp)
+			return (-1);*/
 		test = ft_memccpy(tmp, buf, '\n', ret);
 		*line = ft_strjoin(newline, tmp);
+	/*	free(newline);*/
 		free(tmp);
 		ft_memccpy(buf, test, '\0', BUFFER_SIZE);
 		ret = 1;
 	}
-
 	return (ret);
 }
 
@@ -180,12 +193,8 @@ int	main(int argc, char **argv)
 		ft_putstr_fd(line, 1);
 		ft_putstr_fd("\n", 1);
 		free(line);
-		printf("\n\033[1;33mretour gnl : %d\033[0m\n", gnl);
 	}
-	printf("\n\033[1;32mretour dernier gnl: %d\033[0m\n", gnl);
-	ft_putstr_fd("\n", 1);
-	printf("\n\033[1;34m%d\033[0m\n", FOPEN_MAX);
 	close(fd);
 	return (0);
-}/**/
+}
 /* Fin debugage */
