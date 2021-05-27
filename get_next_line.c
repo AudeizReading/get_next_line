@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/27 15:22:16 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/27 16:56:25 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ int	get_next_line(int fd, char **line)
 {
 	int			ret;
 	static char		buf[BUFFER_SIZE + 1] = {0};
+/*	static char		*buf;*/
 	char	*newline;
 	char		*tmp;
 	char		*test;
@@ -137,20 +138,12 @@ int	get_next_line(int fd, char **line)
 		return (-1);
 	ret = ft_strlen(buf) + 1;
 	newline = ft_calloc(sizeof(*newline), BUFFER_SIZE);
-/*	if (!newline)
-		return (-1);*/
 	while (ret > 0 && !ft_strchr(buf, '\n'))
 	{
 		if (!ft_strchr(buf, '\n'))
 		{
 			newline = ft_strjoin(newline, buf);
-		/*	tmp = ft_strjoin(newline, buf);
-			free(newline);
-			newline = ft_strdup(tmp);
-			free(tmp);*/
 			ret = read(fd, buf, BUFFER_SIZE);
-		/*	if (ret == -1 || !newline)
-				return (-1);*/
 			buf[ret] = 0;
 		/*	printf("\033[1;31mret read : %d\033[0m\n", ret);*/
 			octets_lus += ret;
@@ -165,11 +158,8 @@ int	get_next_line(int fd, char **line)
 	else if (ret > 0)
 	{
 		tmp = ft_calloc(sizeof(*tmp), ret);
-	/*	if (!tmp)
-			return (-1);*/
 		test = ft_memccpy(tmp, buf, '\n', ret);
 		*line = ft_strjoin(newline, tmp);
-	/*	free(newline);*/
 		free(tmp);
 		ft_memccpy(buf, test, '\0', BUFFER_SIZE);
 		ret = 1;
