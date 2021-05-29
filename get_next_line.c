@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/27 16:56:25 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/29 20:57:55 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,19 +149,20 @@ int	get_next_line(int fd, char **line)
 			octets_lus += ret;
 		}
 	}
-	if (!ret)
+	if (!ret && !ft_strlen(newline))
 	{
 		printf("\033[1;31moctets totaux lus : %d\033[0m\n", octets_lus);
 		free(newline);
 		/*return (0);*/
 	}
-	else if (ret > 0)
+	else if (ret > 0 || ft_strlen(newline))
 	{
 		tmp = ft_calloc(sizeof(*tmp), ret);
 		test = ft_memccpy(tmp, buf, '\n', ret);
 		*line = ft_strjoin(newline, tmp);
 		free(tmp);
-		ft_memccpy(buf, test, '\0', BUFFER_SIZE);
+		if (test)
+			ft_memccpy(buf, test, '\0', BUFFER_SIZE);
 		ret = 1;
 	}
 	return (ret);

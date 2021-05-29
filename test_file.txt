@@ -16,3 +16,4 @@ PARTIE BONUS
 Le projet get_next_line laisse peu de place à l'imagination, mais si vous avez complété entièrement la partie obligatoire, vous pouvez faire les bonus proposés ici. Rendez les 3 fichiers initiaux _bonus pour cette partie.
 * Complétez get_next_line avec une seule variable statique.
 * Complétez get_next_line en lui permettant de gérer plusieurs fd. Par exemple, si les fd 3, 4 et 5 sont accessibles en lecture, alors vous pouvez appeler get_next_line une fois sur 3, puis sur 4, puis sur 5, puis le rappeler sur 3, etc. Sans jamais perdre le contenu lu sur chacun des fd, et sans le mélanger.
+Ligne sans \n
