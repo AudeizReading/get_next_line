@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/29 20:57:55 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/29 21:02:30 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,8 +146,8 @@ int	get_next_line(int fd, char **line)
 			ret = read(fd, buf, BUFFER_SIZE);
 			buf[ret] = 0;
 		/*	printf("\033[1;31mret read : %d\033[0m\n", ret);*/
-			octets_lus += ret;
 		}
+		octets_lus += ret;
 	}
 	if (!ret && !ft_strlen(newline))
 	{
