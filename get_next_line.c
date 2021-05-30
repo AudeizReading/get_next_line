@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/29 21:02:30 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/30 18:24:58 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,29 @@ void	*ft_calloc(size_t count, size_t size)
 	return ((void *)buffer);
 }
 
+char	*ft_strnew(size_t size)
+{
+	return (ft_calloc(sizeof(char), (size + 1)));
+}
+
+int		ft_memdel(void **ptr)
+{
+	unsigned int	i;
+
+	i = 0;
+	if (*ptr)
+	{
+		while (ptr[i])
+		{
+			ptr[i] = 0;
+		}
+		free(*ptr);
+		*ptr = NULL;
+		return (1);
+	}
+	return (0);
+}
+
 
 char	*ft_strdup(const char *s1)
 {
@@ -72,7 +95,7 @@ char	*ft_strdup(const char *s1)
 	return (dest);
 }
 
-void	*ft_strchr(const char *s, int c)
+char	*ft_strchr(const char *s, int c)
 {
 	char	*p_s;
 	char	c_c;
@@ -124,40 +147,60 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (dst);
 }
 
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	size_t	i;
+	char	*ptr;
+
+	i = 0;
+	if (!s || (long int)len < 0)
+		return (NULL);
+	ptr = (char *)malloc(len + 1);
+	if (ptr == NULL)
+		return (NULL);
+	while (start < ft_strlen(s) && i < len)
+	{
+		ptr[i] = s[start];
+		i++;
+		start++;
+	}
+	ptr[i] = 0;
+	return (ptr);
+}
+
 int	get_next_line(int fd, char **line)
 {
 	int			ret;
-	static char		buf[BUFFER_SIZE + 1] = {0};
-/*	static char		*buf;*/
+	static char		buf[BUFFER_SIZE + 1];
 	char	*newline;
 	char		*tmp;
 	char		*test;
-	static int	octets_lus = 0;
+/*	static int	octets_lus = 0;*/
 
 	if (fd < 0 || fd > FOPEN_MAX || !line || BUFFER_SIZE < 1)
 		return (-1);
 	ret = ft_strlen(buf) + 1;
-	newline = ft_calloc(sizeof(*newline), BUFFER_SIZE);
+	newline = ft_strdup("");
 	while (ret > 0 && !ft_strchr(buf, '\n'))
 	{
 		if (!ft_strchr(buf, '\n'))
 		{
 			newline = ft_strjoin(newline, buf);
 			ret = read(fd, buf, BUFFER_SIZE);
+			if (ret < 0)
+				return (-1);
 			buf[ret] = 0;
-		/*	printf("\033[1;31mret read : %d\033[0m\n", ret);*/
 		}
-		octets_lus += ret;
+	/*	octets_lus += ret;*/
 	}
 	if (!ret && !ft_strlen(newline))
 	{
-		printf("\033[1;31moctets totaux lus : %d\033[0m\n", octets_lus);
+	/*	printf("\033[1;31moctets totaux lus : %d\033[0m\n", octets_lus);*/
 		free(newline);
-		/*return (0);*/
 	}
 	else if (ret > 0 || ft_strlen(newline))
 	{
-		tmp = ft_calloc(sizeof(*tmp), ret);
+		tmp = ft_calloc(sizeof(*tmp), ret + 1);
 		test = ft_memccpy(tmp, buf, '\n', ret);
 		*line = ft_strjoin(newline, tmp);
 		free(tmp);
@@ -166,6 +209,31 @@ int	get_next_line(int fd, char **line)
 		ret = 1;
 	}
 	return (ret);
+/*	ssize_t		r;
+	char	bf[BUFFER_SIZE + (r = 1)];
+	static char	*c_line = NULL;
+	char	*tmp;
+
+	if (fd < 0 || !line || BUFFER_SIZE < 1)
+		return (-1);
+	c_line == NULL ? c_line = ft_strnew(0) : NULL;
+	while (!ft_strchr(c_line, '\n') && (r = read(fd, bf, BUFFER_SIZE)) > 0)
+	{
+		bf[r] = 0;
+		tmp = ft_strjoin(c_line, bf);
+		ft_memdel((void **)&c_line);
+		c_line = tmp;
+	}
+	if (r == 0)
+		*line = ft_strdup(c_line);
+	else if (r > 0)
+		*line = ft_substr(c_line, 0, (ft_strchr(c_line, '\n') - c_line));
+	else
+		return (-1);
+	tmp = ft_strdup(c_line + (ft_strlen(*line) + ((r > 0) ? +1 : +0)));
+	ft_memdel((void **)&c_line);
+	c_line = tmp;
+	return (r == 0 ? 0 * ft_memdel((void **)&c_line) : 1);*/
 }
 
 /* Uniquement pour le debugage */
