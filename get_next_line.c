@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/31 09:34:23 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/31 10:25:26 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,46 +14,17 @@
 #include <limits.h>
 /* Uniquement pour le debugage */
 #include <stdio.h>
-#include <fcntl.h>
+/*#include <fcntl.h>*/
 
-void	ft_putstr_fd(char *str, int fd)
+/*void	ft_putstr_fd(char *str, int fd)
 {
 	while (*str)
 		write(fd, str++, 1);
-}
+}*/
 /* Fin debugage */
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (s[len])
-		len++;
-	return (len);
-}
-
-
-void	*ft_calloc(size_t count, size_t size)
-{
-	unsigned char	*buffer;
-	size_t			len;
-
-	if (!count || !size)
-	{
-		count = 1;
-		size = 1;
-	}
-	len = size * count;
-	buffer = malloc(len);
-	if (!buffer)
-		return (NULL);
-	while (len--)
-		buffer[len] = 0;
-	return ((void *)buffer);
-}
-
-char	*ft_strnew(size_t size)
+/* Fonctions utilisées par méthode sv */
+/* char	*ft_strnew(size_t size)
 {
 	return (ft_calloc(sizeof(char), (size + 1)));
 }
@@ -75,38 +46,26 @@ int		ft_memdel(void **ptr)
 	}
 	return (0);
 }
-
-
-char	*ft_strdup(const char *s1)
+*char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	size_t	len_s1;
-	char	*dest;
+	size_t	i;
+	char	*ptr;
 
-	len_s1 = ft_strlen(s1);
-	dest = (char *)malloc((len_s1 + 1) * sizeof(*dest));
-	if (!dest)
+	i = 0;
+	if (!s || (long int)len < 0)
+		return (NULL);
+	ptr = (char *)malloc(len + 1);
+	if (ptr == NULL)
+		return (NULL);
+	while (start < ft_strlen(s) && i < len)
 	{
-		errno = ENOMEM;
-		return ((char *)0);
+		ptr[i] = s[start];
+		i++;
+		start++;
 	}
-	dest[len_s1] = 0;
-	while (len_s1--)
-		dest[len_s1] = s1[len_s1];
-	return (dest);
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	char	*p_s;
-	char	c_c;
-
-	p_s = (char *)s;
-	c_c = (char)c;
-	while (*p_s)
-		if (*p_s++ == c_c)
-			return (p_s);
-	return (NULL);
-}
+	ptr[i] = 0;
+	return (ptr);
+}*/
 
 void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
 {
@@ -147,35 +106,14 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (dst);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	size_t	i;
-	char	*ptr;
-
-	i = 0;
-	if (!s || (long int)len < 0)
-		return (NULL);
-	ptr = (char *)malloc(len + 1);
-	if (ptr == NULL)
-		return (NULL);
-	while (start < ft_strlen(s) && i < len)
-	{
-		ptr[i] = s[start];
-		i++;
-		start++;
-	}
-	ptr[i] = 0;
-	return (ptr);
-}
-
 int	get_next_line(int fd, char **line)
 {
+/* 2e essai qui ne passe pas les testeurs */
 	int			ret;
 	static char		buf[BUFFER_SIZE + 1];
 	char	*newline;
 	char		*tmp;
 	char		*test;
-/*	static int	octets_lus = 0;*/
 
 	if (fd < 0 || fd > FOPEN_MAX || !line || BUFFER_SIZE < 1)
 		return (-1);
@@ -191,11 +129,9 @@ int	get_next_line(int fd, char **line)
 				return (-1);
 			buf[ret] = 0;
 		}
-	/*	octets_lus += ret;*/
 	}
 	if (!ret && !ft_strlen(newline))
 	{
-	/*	printf("\033[1;31moctets totaux lus : %d\033[0m\n", octets_lus);*/
 		free(newline);
 	}
 	else if (ret > 0 || ft_strlen(newline))
@@ -209,6 +145,8 @@ int	get_next_line(int fd, char **line)
 		ret = 1;
 	}
 	return (ret);
+
+/* Version sv */
 /*	ssize_t		r;
 	char	bf[BUFFER_SIZE + (r = 1)];
 	static char	*c_line = NULL;
@@ -237,7 +175,7 @@ int	get_next_line(int fd, char **line)
 }
 
 /* Uniquement pour le debugage */
-int	main(int argc, char **argv)
+/*int	main(int argc, char **argv)
 {
 	char	*line;
 	size_t	fd;
@@ -255,6 +193,5 @@ int	main(int argc, char **argv)
 	}
 	close(fd);
 	return (0);
-}
+}*/
 /* Fin debugage */
-/* Commentaire juste pour commit */
