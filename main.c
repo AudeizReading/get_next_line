@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 10:23:24 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/31 10:24:40 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/31 10:33:40 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ int	main(int argc, char **argv)
 		ft_putstr_fd("\n", 1);
 		free(line);
 	}
+	if (gnl == -1)
+		ft_putstr_fd("Votre gnl a rencontré un souci\n", 1);
 	close(fd);
 	return (0);
 }

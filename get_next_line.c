@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/31 10:25:26 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/31 10:29:50 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,6 @@
 #include <limits.h>
 /* Uniquement pour le debugage */
 #include <stdio.h>
-/*#include <fcntl.h>*/
-
-/*void	ft_putstr_fd(char *str, int fd)
-{
-	while (*str)
-		write(fd, str++, 1);
-}*/
 /* Fin debugage */
 
 /* Fonctions utilisées par méthode sv */
@@ -115,7 +108,7 @@ int	get_next_line(int fd, char **line)
 	char		*tmp;
 	char		*test;
 
-	if (fd < 0 || fd > FOPEN_MAX || !line || BUFFER_SIZE < 1)
+	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
 	ret = ft_strlen(buf) + 1;
 	newline = ft_strdup("");
@@ -173,25 +166,3 @@ int	get_next_line(int fd, char **line)
 	c_line = tmp;
 	return (r == 0 ? 0 * ft_memdel((void **)&c_line) : 1);*/
 }
-
-/* Uniquement pour le debugage */
-/*int	main(int argc, char **argv)
-{
-	char	*line;
-	size_t	fd;
-	int		gnl;
-
-	if (argc == 2)
-		fd = open(argv[1], O_RDONLY);
-	else
-		fd = 0;
-	while ((gnl = get_next_line(fd, &line)) > 0)
-	{
-		ft_putstr_fd(line, 1);
-		ft_putstr_fd("\n", 1);
-		free(line);
-	}
-	close(fd);
-	return (0);
-}*/
-/* Fin debugage */
