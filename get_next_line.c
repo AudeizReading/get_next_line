@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/31 14:20:37 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/31 14:28:51 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,10 @@ int	get_next_line(int fd, char **line)
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
 	if (!buf)
+	{
+		printf("Pas de buffer\n");
 		buf = ft_calloc(sizeof(*buf), BUFFER_SIZE);
+	}
 	newline = ft_strdup("");
 	ret = 1;
 	while (!ft_strchr(buf, '\n') && ret > 0)
@@ -111,8 +114,6 @@ int	get_next_line(int fd, char **line)
 		printf("buf avant travail dessus: \033[1;31m%s\033[0m\n", buf);
 		printf("newline avant travail dessus: \033[1;31m%s\033[0m\n", newline);
 		newline = ft_strjoin(newline, buf);
-	/*	if (buf)
-			free(buf);*/
 		ret = read(fd, buf, BUFFER_SIZE);
 		if (ret == -1)
 			return (-1);
