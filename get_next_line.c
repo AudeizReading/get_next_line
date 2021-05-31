@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/31 11:16:52 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/05/31 14:20:37 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ int	get_next_line(int fd, char **line)
 	int			ret;
 	static char	*buf;
 	char		*newline;
+	char		*tmp;
 
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
@@ -107,10 +108,11 @@ int	get_next_line(int fd, char **line)
 	ret = 1;
 	while (!ft_strchr(buf, '\n') && ret > 0)
 	{
-		printf("buf avant travail dessus: \033[31m%s\033[0m\n", buf);
-		if (newline)
-			printf("newline avant travail dessus: \033[31m%s\033[0m\n", newline);
+		printf("buf avant travail dessus: \033[1;31m%s\033[0m\n", buf);
+		printf("newline avant travail dessus: \033[1;31m%s\033[0m\n", newline);
 		newline = ft_strjoin(newline, buf);
+	/*	if (buf)
+			free(buf);*/
 		ret = read(fd, buf, BUFFER_SIZE);
 		if (ret == -1)
 			return (-1);
@@ -119,8 +121,30 @@ int	get_next_line(int fd, char **line)
 		printf("newline apres travail dessus: \033[31m%s\033[0m\n", newline);
 		printf("\033[31m----------------------------------------------------------\033[0m\n");
 	}
+	printf("buf sortie boucle while: \033[33m%s\033[0m\n", buf);
+	printf("newline sortie boucle while: \033[33m%s\033[0m\n", newline);
+	printf("\033[33m----------------------------------------------------------\033[0m\n");
+	if (ft_strchr(buf, '\n'))
+	{
+		tmp = ft_calloc(sizeof(*tmp), ret);
+		buf = ft_memccpy(tmp, buf, '\n', ret);
+		newline = ft_strjoin(newline, tmp);
+	/*	free(tmp);*/
+	}
+	else
+	{
+	/*	tmp = ft_strdup(buf);*/
+	/*	newline = ft_strjoin(newline, tmp); */
+		printf("\033[35mDon't know what about it, just for the non segfault\033[0m\n");
+	}
+	*line = ft_strdup(newline);
+	free(newline);
 	if (ret == 0)
+	{
+	/*	if (buf)
+			free(buf);*/
 		return (0);
+	}
 	else
 		return (1);
 }
