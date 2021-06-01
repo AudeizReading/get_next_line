@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/06/01 14:43:21 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/06/01 18:35:55 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,16 +96,16 @@ int	get_next_line(int fd, char **line)
 	}
 	return (ret);*/
 	int			ret;
-	/*static char	buf[BUFFER_SIZE];*/
-	static char	*buf;
+	static char	buf[BUFFER_SIZE + 1];
+/*	static char	*buf;*/
 	char		*newline;
 	char		*tmp;
 /*	char		*after_line;*/
 
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
-	if (!buf)
-		buf = ft_calloc(sizeof(*buf), BUFFER_SIZE + 1);
+/*	if (!buf)
+		buf = ft_calloc(sizeof(*buf), BUFFER_SIZE + 1);*/
 	newline = ft_strdup("");
 	ret = ft_strlen(buf) + 1;
 	while (!ft_strchr(buf, '\n') && ret > 0)
@@ -144,9 +144,6 @@ int	get_next_line(int fd, char **line)
 	*line = ft_strdup(newline);
 	free(newline);
 	if (ret == 0)
-	{
-		free(buf);
 		return (0);
-	}
 	return (1);
 }
