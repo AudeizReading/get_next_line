@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/06/01 11:18:45 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/06/01 14:43:21 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,18 +96,16 @@ int	get_next_line(int fd, char **line)
 	}
 	return (ret);*/
 	int			ret;
-	static char	buf[BUFFER_SIZE];
+	/*static char	buf[BUFFER_SIZE];*/
+	static char	*buf;
 	char		*newline;
 	char		*tmp;
-	char		*after_line;
+/*	char		*after_line;*/
 
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
-/*	if (!buf)
-	{
-		printf("Pas de buffer\n");
-		buf = ft_calloc(sizeof(*buf), BUFFER_SIZE);
-	}*/
+	if (!buf)
+		buf = ft_calloc(sizeof(*buf), BUFFER_SIZE + 1);
 	newline = ft_strdup("");
 	ret = ft_strlen(buf) + 1;
 	while (!ft_strchr(buf, '\n') && ret > 0)
@@ -115,7 +113,9 @@ int	get_next_line(int fd, char **line)
 	/*	printf("buf avant travail dessus: \033[1;31m%s\033[0m\n", buf);
 		printf("newline avant travail dessus: \033[1;31m%s\033[0m\n", newline);*/
 		newline = ft_strjoin(newline, buf);
-		ret = read(fd, buf, BUFFER_SIZE/* - 1*/);
+	/*	if (buf)
+			free(buf);*/
+		ret = read(fd, buf, BUFFER_SIZE);
 		if (ret == -1)
 			return (-1);
 		buf[ret] = 0;
@@ -129,14 +129,14 @@ int	get_next_line(int fd, char **line)
 	if (ft_strchr(buf, '\n'))
 	{
 		tmp = ft_calloc(sizeof(*tmp), ret);
-		/*ft_memccpy(buf, ft_memccpy(tmp, buf, '\n', ret), '\n', BUFFER_SIZE);*/
-		after_line = ft_memccpy(tmp, buf, '\n', ret);
+		ft_memccpy(buf, ft_memccpy(tmp, buf, '\n', ret), '\0', BUFFER_SIZE);
+	/*	after_line = ft_memccpy(tmp, buf, '\n', ret);*/
 	/*	printf("buf, avant affectation: \033[36m%s\033[0m\n", buf);
 		printf("tmp, apres affectation: \033[36m%s\033[0m\n", tmp);
 		printf("after_line, apres affectation: \033[36m%s\033[0m\n", after_line);*/
 		newline = ft_strjoin(newline, tmp);
 		free(tmp);
-		ft_memccpy(buf, after_line, '\0', BUFFER_SIZE);
+	/*	ft_memccpy(buf, after_line, '\0', BUFFER_SIZE);*/
 	/*	printf("newline, apres affectation: \033[36m%s\033[0m\n", newline);
 		printf("buf, apres affectation: \033[36m%s\033[0m\n", buf);
 		printf("\033[36m----------------------------------------------------------\033[0m\n");*/
@@ -144,7 +144,9 @@ int	get_next_line(int fd, char **line)
 	*line = ft_strdup(newline);
 	free(newline);
 	if (ret == 0)
+	{
+		free(buf);
 		return (0);
-	else
-		return (1);
+	}
+	return (1);
 }
