@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/31 14:28:51 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/06/01 11:18:45 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,56 +96,55 @@ int	get_next_line(int fd, char **line)
 	}
 	return (ret);*/
 	int			ret;
-	static char	*buf;
+	static char	buf[BUFFER_SIZE];
 	char		*newline;
 	char		*tmp;
+	char		*after_line;
 
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
-	if (!buf)
+/*	if (!buf)
 	{
 		printf("Pas de buffer\n");
 		buf = ft_calloc(sizeof(*buf), BUFFER_SIZE);
-	}
+	}*/
 	newline = ft_strdup("");
-	ret = 1;
+	ret = ft_strlen(buf) + 1;
 	while (!ft_strchr(buf, '\n') && ret > 0)
 	{
-		printf("buf avant travail dessus: \033[1;31m%s\033[0m\n", buf);
-		printf("newline avant travail dessus: \033[1;31m%s\033[0m\n", newline);
+	/*	printf("buf avant travail dessus: \033[1;31m%s\033[0m\n", buf);
+		printf("newline avant travail dessus: \033[1;31m%s\033[0m\n", newline);*/
 		newline = ft_strjoin(newline, buf);
-		ret = read(fd, buf, BUFFER_SIZE);
+		ret = read(fd, buf, BUFFER_SIZE/* - 1*/);
 		if (ret == -1)
 			return (-1);
 		buf[ret] = 0;
-		printf("buf apres travail dessus: \033[31m%s\033[0m\n", buf);
+/*		printf("buf apres travail dessus: \033[31m%s\033[0m\n", buf);
 		printf("newline apres travail dessus: \033[31m%s\033[0m\n", newline);
-		printf("\033[31m----------------------------------------------------------\033[0m\n");
+		printf("\033[31m----------------------------------------------------------\033[0m\n");*/
 	}
-	printf("buf sortie boucle while: \033[33m%s\033[0m\n", buf);
+/*	printf("buf sortie boucle while: \033[33m%s\033[0m\n", buf);
 	printf("newline sortie boucle while: \033[33m%s\033[0m\n", newline);
-	printf("\033[33m----------------------------------------------------------\033[0m\n");
+	printf("\033[33m----------------------------------------------------------\033[0m\n");*/
 	if (ft_strchr(buf, '\n'))
 	{
 		tmp = ft_calloc(sizeof(*tmp), ret);
-		buf = ft_memccpy(tmp, buf, '\n', ret);
+		/*ft_memccpy(buf, ft_memccpy(tmp, buf, '\n', ret), '\n', BUFFER_SIZE);*/
+		after_line = ft_memccpy(tmp, buf, '\n', ret);
+	/*	printf("buf, avant affectation: \033[36m%s\033[0m\n", buf);
+		printf("tmp, apres affectation: \033[36m%s\033[0m\n", tmp);
+		printf("after_line, apres affectation: \033[36m%s\033[0m\n", after_line);*/
 		newline = ft_strjoin(newline, tmp);
-	/*	free(tmp);*/
-	}
-	else
-	{
-	/*	tmp = ft_strdup(buf);*/
-	/*	newline = ft_strjoin(newline, tmp); */
-		printf("\033[35mDon't know what about it, just for the non segfault\033[0m\n");
+		free(tmp);
+		ft_memccpy(buf, after_line, '\0', BUFFER_SIZE);
+	/*	printf("newline, apres affectation: \033[36m%s\033[0m\n", newline);
+		printf("buf, apres affectation: \033[36m%s\033[0m\n", buf);
+		printf("\033[36m----------------------------------------------------------\033[0m\n");*/
 	}
 	*line = ft_strdup(newline);
 	free(newline);
 	if (ret == 0)
-	{
-	/*	if (buf)
-			free(buf);*/
 		return (0);
-	}
 	else
 		return (1);
 }
