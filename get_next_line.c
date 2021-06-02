@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/06/02 15:44:38 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/06/02 15:51:16 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ int	get_next_line(int fd, char **line)
 	}
 	if (ft_strchr(buf, '\n'))
 	{
-		/*tmp = ft_calloc(sizeof(*tmp), ret);*/
 		tmp = ft_calloc(sizeof(*tmp), ft_strchr(buf, '\n') - buf);
 		if (!tmp)
 		{
