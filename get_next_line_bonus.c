@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 10:31:13 by alellouc          #+#    #+#             */
-/*   Updated: 2021/06/04 10:24:30 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/06/04 19:14:26 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ char	*ft_parse_buf(size_t bytes, char *buf, char **newline)
 		return (NULL);
 	ft_memccpy(buf, ft_memccpy(end_line, buf, 10, end_len), 0, begin_len);
 	*newline = ft_strjoin(*newline, end_line);
-	if (!*newline)
+/*	if (!*newline)*/
+	if (ft_check_mem(*newline, &end_line))
 		return (NULL);
 	free(end_line);
 	return (*newline);
