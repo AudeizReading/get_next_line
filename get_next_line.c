@@ -6,16 +6,11 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/06/03 15:59:58 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/06/04 09:56:25 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <limits.h>
-/* Uniquement pour le debugage */
-#include <stdio.h>
-/* Fin debugage */
-
 
 void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
 {
@@ -40,9 +35,9 @@ void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*dst;
-	size_t	len_s1;
-	size_t	len_s2;
+	char				*dst;
+	size_t				len_s1;
+	size_t				len_s2;
 
 	len_s1 = ft_strlen(s1);
 	len_s2 = ft_strlen(s2);
@@ -58,40 +53,39 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 char	*ft_parse_buf(size_t bytes, char *buf, char **newline)
 {
-	char	*end_line;
-	/*char	*next_line;*/
-	size_t	end_len;
-	size_t	begin_len;
+	char				*end_line;
+	size_t				end_len;
+	size_t				begin_len;
 
-	/*next_line = ft_strchr(*buf, '\n');*/ /* voir si on malloc ca ou si on le supprime */
-	/*end_len = next_line - *buf;*/
 	end_len = ft_strchr(buf, '\n') - buf;
 	begin_len = bytes - end_len + 1;
 	end_line = ft_calloc(sizeof(*end_line), end_len);
 	if (!end_line)
 		return (NULL);
-/*	printf("\tbuffer avant travail dessus  : \033[33m%s\033[0m\n", buf);*/
-	ft_memccpy(buf, ft_memccpy(end_line, buf, '\n', end_len), '\0', begin_len);
-/*	ft_memccpy(buf, ft_memccpy(end_line, buf, '\n', end_len), '\0', bytes -
-**	ft_strlen(end_line));*/
-/*	printf("\tbegin_len : \033[36m%ld\033[0m\n", begin_len);
-	printf("\tbytes - ft_strlen(end_line) : \033[36m%ld\033[0m\n", bytes - ft_strlen(end_line));
-	printf("\tend_line apres travail dessus : \033[35m%s\033[0m\n", end_line);
-	printf("\tbuffer apres travail dessus : \033[35m%s\033[0m\n", buf);*/
-	/* free(next_line); */
+	ft_memccpy(buf, ft_memccpy(end_line, buf, 10, end_len), 0, begin_len);
 	*newline = ft_strjoin(*newline, end_line);
-/*	printf("\tnewline apres travail dessus : \033[35m%s\033[0m\n", *newline);*/
 	if (!*newline)
 		return (NULL);
 	free(end_line);
 	return (*newline);
 }
 
+int	ft_check_mem(char *new_ptr, char **used_ptr)
+{
+	if (!new_ptr)
+	{
+		free((void *)*used_ptr);
+		*used_ptr = NULL;
+		return (1);
+	}
+	return (0);
+}
+
 int	get_next_line(int fd, char **line)
 {
-	int			ret;
-	static char	buf[BUFFER_SIZE + 1];
-	char		*newline;
+	int					ret;
+	static char			buf[BUFFER_SIZE + 1];
+	char				*newline;
 
 	if (read(fd, buf, 0) < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
@@ -101,18 +95,15 @@ int	get_next_line(int fd, char **line)
 	{
 		newline = ft_strjoin(newline, buf);
 		ret = read(fd, buf, BUFFER_SIZE);
-		if (ret == -1 || !newline)
+		if (ret == -1 || ft_check_mem(newline, &newline))
 			return (-1);
 		buf[ret] = 0;
 	}
 	if (ft_strchr(buf, '\n'))
 		newline = ft_parse_buf(ret, buf, &newline);
 	*line = ft_strdup(newline);
-	if (!*line)
-	{
-		free(newline);
+	if (ft_check_mem(*line, &newline))
 		return (-1);
-	}
 	free(newline);
 	if (ret == 0)
 		return (0);

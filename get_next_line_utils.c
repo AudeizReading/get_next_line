@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/26 16:07:11 by alellouc          #+#    #+#             */
-/*   Updated: 2021/05/31 10:19:22 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/06/04 09:55:37 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ size_t	ft_strlen(const char *s)
 		len++;
 	return (len);
 }
-
 
 void	*ft_calloc(size_t count, size_t size)
 {
