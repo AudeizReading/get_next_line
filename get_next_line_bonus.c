@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/02 10:31:13 by alellouc          #+#    #+#             */
-/*   Updated: 2021/06/07 09:53:54 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/06/07 11:22:17 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*ft_concat(char const *s1, char const *s2)
 
 	len_s1 = ft_strlen(s1);
 	len_s2 = ft_strlen(s2);
-	dst = ft_calloc(sizeof(*dst), (len_s1 + len_s2 + 1)); 
+	dst = ft_calloc(sizeof(*dst), (len_s1 + len_s2 + 1));
 	if (dst == NULL)
 		return (NULL);
 	ft_ccpy(dst, s1, 0, len_s1);
