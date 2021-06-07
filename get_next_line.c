@@ -6,13 +6,13 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/06/04 19:25:05 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/06/07 09:51:12 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
+void	*ft_ccpy(void *dst, const void *src, int c, size_t n)
 {
 	unsigned char		*p_dst;
 	unsigned const char	*p_src;
@@ -33,7 +33,7 @@ void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
 	return (NULL);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_concat(char const *s1, char const *s2)
 {
 	char				*dst;
 	size_t				len_s1;
@@ -41,11 +41,11 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	len_s1 = ft_strlen(s1);
 	len_s2 = ft_strlen(s2);
-	dst = (char *)malloc(sizeof(*dst) * (len_s1 + len_s2 + 1));
+	dst = ft_calloc(sizeof(*dst), (len_s1 + len_s2 + 1)); 
 	if (dst == NULL)
 		return (NULL);
-	ft_memccpy(dst, s1, 0, len_s1);
-	ft_memccpy((dst + len_s1), s2, 0, len_s2);
+	ft_ccpy(dst, s1, 0, len_s1);
+	ft_ccpy((dst + len_s1), s2, 0, len_s2);
 	dst[len_s1 + len_s2] = 0;
 	free((void *)s1);
 	return (dst);
@@ -57,13 +57,13 @@ char	*ft_parse_buf(size_t bytes, char *buf, char **newline)
 	size_t				end_len;
 	size_t				begin_len;
 
-	end_len = ft_strchr(buf, '\n') - buf;
+	end_len = ft_search(buf, '\n') - buf;
 	begin_len = bytes - end_len + 1;
 	end_line = ft_calloc(sizeof(*end_line), end_len);
 	if (!end_line)
 		return (NULL);
-	ft_memccpy(buf, ft_memccpy(end_line, buf, 10, end_len), 0, begin_len);
-	*newline = ft_strjoin(*newline, end_line);
+	ft_ccpy(buf, ft_ccpy(end_line, buf, 10, end_len), 0, begin_len);
+	*newline = ft_concat(*newline, end_line);
 	if (ft_check_mem(*newline, &end_line))
 		return (NULL);
 	free(end_line);
@@ -91,15 +91,15 @@ int	get_next_line(int fd, char **line)
 		return (-1);
 	newline = ft_strdup("");
 	ret = ft_strlen(buf) + 1;
-	while (!ft_strchr(buf, '\n') && ret > 0)
+	while (!ft_search(buf, '\n') && ret > 0)
 	{
-		newline = ft_strjoin(newline, buf);
+		newline = ft_concat(newline, buf);
 		ret = read(fd, buf, BUFFER_SIZE);
 		if (ret == -1 || ft_check_mem(newline, &newline))
 			return (-1);
 		buf[ret] = 0;
 	}
-	if (ft_strchr(buf, '\n'))
+	if (ft_search(buf, '\n'))
 		newline = ft_parse_buf(ret, buf, &newline);
 	*line = ft_strdup(newline);
 	if (ft_check_mem(*line, &newline))

@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/26 16:07:11 by alellouc          #+#    #+#             */
-/*   Updated: 2021/06/04 09:55:37 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/06/07 09:54:43 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*ft_strdup(const char *s1)
 	char				*dest;
 
 	len_s1 = ft_strlen(s1);
-	dest = (char *)malloc((len_s1 + 1) * sizeof(*dest));
+	dest = ft_calloc(sizeof(*dest), (len_s1 + 1)); 
 	if (!dest)
 	{
 		errno = ENOMEM;
@@ -59,7 +59,7 @@ char	*ft_strdup(const char *s1)
 	return (dest);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_search(const char *s, int c)
 {
 	char				*p_s;
 	char				c_c;
