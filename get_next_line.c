@@ -6,7 +6,7 @@
 /*   By: alellouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 08:54:45 by alellouc          #+#    #+#             */
-/*   Updated: 2021/06/08 13:10:37 by alellouc         ###   ########.fr       */
+/*   Updated: 2021/06/08 13:12:16 by alellouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,4 +109,3 @@ int	get_next_line(int fd, char **line)
 		return (0);
 	return (1);
 }
-foolish line for the fucking git push
